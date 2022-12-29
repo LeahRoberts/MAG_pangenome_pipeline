@@ -1,0 +1,14 @@
+# dir with genome fasta files
+genome_fasta: example/genome_fastas
+
+# output dir
+output_dir: output/dir
+
+# training file
+training_file: path/to/training/file
+
+#mmseqs2_container: docker://quay.io/biocontainers/mmseqs2:13.45111--pl5321hf1761c0_2
+#bakta_container: docker pull oschwengers/bakta:latest
+
+# path to bakta DB:
+bakta_db: /nfs/research/zi/lroberts/bakta_DB/db
