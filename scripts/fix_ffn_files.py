@@ -2,10 +2,13 @@ import glob
 from Bio import SeqIO
 
 
+# inputdir and outputdir need to be without trailing "/"
+
 def fix_ffn_files(annotations_dir, output_dir):
     fastas = glob.glob(annotations_dir + "/*/*ffn")
     for file in fastas:
-        filename = file.replace(".ffn", "")
+        filename = file.split("/")[-1]
+        filename = filename.replace(".ffn", "")
         output_handle = output_dir + "/" + filename + ".formatted.ffn"
         records = SeqIO.parse(file, "fasta")
         all_records = []

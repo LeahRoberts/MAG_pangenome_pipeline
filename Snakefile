@@ -1,6 +1,6 @@
-#1. how to batch submit
-#2. how to wait until one rule finished
-#3. concat specific output files after finished
+#1. how to batch submit (for Bakta)
+#2. how to wait until one rule finished before starting another
+#3. parameter/config to say if already have annotations? i.e. start at rule fix_ffn_file?
 
 
 configfile: "config.yaml"
@@ -37,6 +37,8 @@ rule fix_ffn_file:
         annotations = directory(f"{config['output_dir']}/annotated")
     output:
         fixed_annotations = directory(f"{config['output_dir']}/all_ffn")
+    conda:
+        "envs/biopython.yaml"
     script: "scripts/fix_ffn_files.py"
 
 
@@ -72,8 +74,25 @@ rule mmseqs2:
     shell:
         "mmseqs easy-cluster {input} {params.output_prefix} {params.tmp_dir} --min-seq-id {params.seq_id} \
         --cov-mode {params.cov_mode} -c {params.c} --threads {threads} >{log} 2>&1"
-        
-# rule build_matrix:
 
 
+rule rep_seq_list:
+    input:
+        f"{config['output_dir']}/mmseqs/mmseqs_rep_seq.fasta"
+    output:
+        f"{config['output_dir']}/mmseqs/rep_sequences.list"
+    shell:
+        "grep '>' {input} | cut -f2 -d'>' | cut -f1 -d' ' > {output}"
+
+
+rule build_matrix:
+    input:
+        rep_list = f"{config}['output_dir']}/mmseqs/rep_sequences.list",
+        clusters = f"{config['output_dir']}/mmseqs/mmseqs_cluster.tsv"
+    output:
+        f"{config['output_dir']}/presence_absence_matrix.txt"
+    conda:
+        # also pandas
+        "envs/biopython.yaml"
+    script: "scripts/make_presence_absence_matrix.py"
 
