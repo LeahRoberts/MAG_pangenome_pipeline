@@ -92,10 +92,23 @@ rule rep_seq_list:
         "grep '>' {input} | cut -f2 -d'>' | cut -f1 -d' ' > {output}"
 
 
+rule sort_mmseqs2_clusters:
+    input:
+        clusters = rules.mmseqs2.output.clusters
+    output:
+        sorted_clusters = f"{config['output_dir']}/mmseqs/mmseqs_cluster.sorted.tsv"
+    threads: 1
+    resources:
+        mem_mb=200
+    log:
+        f"{config['output_dir']}/logs/sort_mmseqs2_clusters.log"
+    shell: "sort {input.clusters} > {output.sorted_clusters}"
+
+
 rule build_matrix:
     input:
         rep_list = f"{config['output_dir']}/mmseqs/rep_sequences.list",
-        clusters = f"{config['output_dir']}/mmseqs/mmseqs_cluster.tsv"
+        clusters = f"{config['output_dir']}/mmseqs/mmseqs_cluster.sorted.tsv"
     output:
         matrix = f"{config['output_dir']}/presence_absence_matrix.txt"
     conda:

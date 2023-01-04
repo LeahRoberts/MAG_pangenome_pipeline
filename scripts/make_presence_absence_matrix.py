@@ -19,6 +19,8 @@ def make_presence_absence_matrix(adjacency_file, representative_sequences, outpu
             dictionary_of_gene_presence_absence[edge1][sample_1_name] = 1
             dictionary_of_gene_presence_absence[edge1][sample_2_name] = 1
     matrixDf = pd.DataFrame.from_dict(dictionary_of_gene_presence_absence)
+    matrixDf = matrixDf.reindex(sorted(matrixDf.columns), axis=1)
+    matrixDf = matrixDf.sort_index()
     matrixDf.fillna(0, inplace=True)
     matrixDf.to_csv(outputfilename, sep=',')
 
