@@ -23,4 +23,4 @@ def make_presence_absence_matrix(adjacency_file, representative_sequences, outpu
     matrixDf.to_csv(outputfilename, sep=',')
 
 
-make_presence_absence_matrix(snakemake.input.clusters, snakemake.input.rep_list, snakemake.output)
+make_presence_absence_matrix(snakemake.input.clusters, snakemake.input.rep_list, snakemake.output.matrix)

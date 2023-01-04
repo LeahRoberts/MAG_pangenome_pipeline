@@ -1,0 +1,37 @@
+name: mmseq2
+channels:
+  - conda-forge
+  - bioconda
+  - defaults
+dependencies:
+  - _libgcc_mutex=0.1=conda_forge
+  - _openmp_mutex=4.5=2_gnu
+  - aria2=1.23.0=0
+  - bzip2=1.0.8=h7f98852_4
+  - c-ares=1.11.0=h470a237_1
+  - ca-certificates=2022.9.24=ha878542_0
+  - gawk=5.1.0=h7f98852_0
+  - gettext=0.21.1=h27087fc_0
+  - icu=70.1=h27087fc_0
+  - libgcc=7.2.0=h69d50b8_2
+  - libgcc-ng=12.2.0=h65d4601_18
+  - libgomp=12.2.0=h65d4601_18
+  - libiconv=1.17=h166bdaf_0
+  - libidn2=2.3.3=h166bdaf_0
+  - libnsl=2.0.0=h7f98852_0
+  - libsqlite=3.39.4=h753d276_0
+  - libssh2=1.10.0=hf14f497_3
+  - libstdcxx-ng=12.2.0=h46fd767_18
+  - libunistring=0.9.10=h7f98852_0
+  - libxml2=2.10.3=h7463322_0
+  - libzlib=1.2.13=h166bdaf_4
+  - mmseqs2=14.7e284=pl5321hf1761c0_0
+  - ncurses=6.3=h27087fc_1
+  - openssl=3.0.5=h166bdaf_2
+  - perl=5.32.1=2_h7f98852_perl5
+  - readline=8.1.2=h0f457ee_0
+  - sqlite=3.39.4=h4ff8645_0
+  - wget=1.20.3=ha35d2d1_1
+  - xz=5.2.6=h166bdaf_0
+  - zlib=1.2.13=h166bdaf_4
+prefix: /nfs/research/zi/lroberts/miniconda3/envs/mmseq2
