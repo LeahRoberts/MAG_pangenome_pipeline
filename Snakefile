@@ -99,7 +99,7 @@ rule sort_mmseqs2_clusters:
         sorted_clusters = f"{config['output_dir']}/mmseqs/mmseqs_cluster.sorted.tsv"
     threads: 1
     resources:
-        mem_mb=200
+        mem_mb=2000
     log:
         f"{config['output_dir']}/logs/sort_mmseqs2_clusters.log"
     shell: "sort {input.clusters} > {output.sorted_clusters}"
@@ -111,6 +111,9 @@ rule build_matrix:
         clusters = f"{config['output_dir']}/mmseqs/mmseqs_cluster.sorted.tsv"
     output:
         matrix = f"{config['output_dir']}/presence_absence_matrix.txt"
+    threads: 1
+    resources:
+        mem_mb=5000
     conda:
         # env has biopython and pandas
         "poppunk"
