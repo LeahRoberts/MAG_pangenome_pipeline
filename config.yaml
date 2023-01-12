@@ -1,14 +1,11 @@
 # dir with genome fasta files
-genome_fasta: /hps/nobackup/iqbal/lroberts/microbial_ecosystems/MAG_pangenome_pipeline/test/fasta
+genome_fasta: path/to/dir/with/MAGs/in/fasta/format/MAG.fasta
 
 # output dir
-output_dir: /hps/nobackup/iqbal/lroberts/microbial_ecosystems/MAG_pangenome_pipeline/output
+output_dir: path/to/output/dir
 
 # training file
-training_file: /hps/nobackup/iqbal/lroberts/microbial_ecosystems/annotate/b_uniformis/training_file/b_uniformis.trn
-
-#mmseqs2_container: docker://quay.io/biocontainers/mmseqs2:13.45111--pl5321hf1761c0_2
-#bakta_container: docker pull oschwengers/bakta:latest
+training_file: path/to/training/file/training.trn
 
 # path to bakta DB:
-bakta_db: /nfs/research/zi/lroberts/bakta_DB/db
+bakta_db: path/to/bakta/DB
