@@ -1,11 +1,31 @@
-# dir with genome fasta files
-genome_fasta: path/to/dir/with/MAGs/in/fasta/format/MAG.fasta
+### BAKTA workflow:
+BAKTA:
+  exec : False
+
+### GFF workflow:
+GFF:
+  exec : True
+
+### Required for both workflows:
 
 # output dir
-output_dir: path/to/output/dir
+output_dir: /path/to/output/dir
+
+
+### Required for BAKTA workflow:
+
+# dir with genome fasta files
+genome_fasta: path/to/dir/with/MAGs/in/fasta/format/{fasta extension}
 
 # training file
 training_file: path/to/training/file/training.trn
 
 # path to bakta DB:
 bakta_db: path/to/bakta/DB
+
+
+### Required for GFF workflow:
+
+# dir with GFF files:
+gff_dir: /path/to/dir/with/GFF/files/{gff extension}
+
