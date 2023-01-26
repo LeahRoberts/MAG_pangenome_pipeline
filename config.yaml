@@ -1,6 +1,9 @@
 # dir with genome fasta files
 genome_fasta: path/to/dir/with/MAGs/in/fasta/format/MAG.fasta
 
+# dir with GFF files:
+gff_dir: path/to/dir/with/GFF/files
+
 # output dir
 output_dir: path/to/output/dir
 

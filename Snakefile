@@ -7,6 +7,7 @@ rule all:
     input: f"{config['output_dir']}/presence_absence_matrix.txt"
 
 
+# if wanting to annotate MAGs with BAKTA
 rule bakta:
     input:
         genome = f"{config['genome_fasta']}/{{sample}}.fasta"
@@ -48,6 +49,22 @@ rule fix_ffn_file:
         "Snakemake"
     script: "scripts/fix_ffn_files.py"
 
+
+# if you have existing GFF to use:
+rule transform_gff:
+    input:
+        gff_dir = f"{config['gff_dir']}/{{sample}}.gff"
+    output:
+        ffn_files = f"{config['output_dir']}/all_ffn"
+    threads: 1
+    resources:
+        mem_mb=lambda wildcards, attempt: attempt * 15000
+    shell:
+        """
+        python scripts/panphlan_pangenome_generation.py --i_gff {input}
+        mv ffn_from_gff {output.ffn_files}
+        """
+    
 
 rule concat:
     input:
