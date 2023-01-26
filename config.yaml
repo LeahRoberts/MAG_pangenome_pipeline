@@ -1,11 +1,19 @@
+# BAKTA workflow:
+BAKTA:
+  exec : False
+
+# GFF workflow:
+GFF:
+  exec : True
+
 # dir with genome fasta files
 genome_fasta: path/to/dir/with/MAGs/in/fasta/format/MAG.fasta
 
 # dir with GFF files:
-gff_dir: path/to/dir/with/GFF/files
+gff_dir: /Users/leah/Desktop/MAG_pangenome_pipeline/test/gff_files
 
 # output dir
-output_dir: path/to/output/dir
+output_dir: /Users/leah/Desktop/MAG_pangenome_pipeline/output
 
 # training file
 training_file: path/to/training/file/training.trn

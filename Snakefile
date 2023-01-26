@@ -7,64 +7,71 @@ rule all:
     input: f"{config['output_dir']}/presence_absence_matrix.txt"
 
 
+if config["BAKTA"]["exec"] and config["GFF"]["exec"]:
+    print("cannot have BAKTA and GFF true in config file")
+    exit(1)
+
+
 # if wanting to annotate MAGs with BAKTA
-rule bakta:
-    input:
-        genome = f"{config['genome_fasta']}/{{sample}}.fasta"
-    output:
-        ann_dir = directory(f"{config['output_dir']}/annotated/{{sample}}_ann")
-    conda:
-        "bakta"
-    threads: 1
-    resources:
-        mem_mb=lambda wildcards, attempt: attempt * 15000
-    params:
-        trn = config['training_file'],
-        DB = directory(f"{config['bakta_db']}")
-    log:
-        f"{config['output_dir']}/logs/bakta/{{sample}}.log"
-    shell:
-        """
-        bakta {input.genome} --db {params.DB} --prefix {wildcards.sample} --prodigal-tf {params.trn} \
-         --translation-table 11 --threads {threads} --output {output.ann_dir} >{log} 2>&1
-        """
+if config["BAKTA"]["exec"]:
+    rule bakta:
+        input:
+            genome = f"{config['genome_fasta']}/{{sample}}.fasta"
+        output:
+            ann_dir = directory(f"{config['output_dir']}/annotated/{{sample}}_ann")
+        conda:
+            "bakta"
+        threads: 1
+        resources:
+            mem_mb=lambda wildcards, attempt: attempt * 15000
+        params:
+            trn = config['training_file'],
+            DB = directory(f"{config['bakta_db']}")
+        log:
+            f"{config['output_dir']}/logs/bakta/{{sample}}.log"
+        shell:
+            """
+            bakta {input.genome} --db {params.DB} --prefix {wildcards.sample} --prodigal-tf {params.trn} \
+             --translation-table 11 --threads {threads} --output {output.ann_dir} >{log} 2>&1
+            """
 
 
-def get_samples(genome_dir):
-    list_of_samples = glob.glob(genome_dir + "/*.fasta")
-    new_list_of_samples = []
-    for sam in list_of_samples:
-        sam = sam.split("/")[-1]
-        sam = sam.replace(".fasta", "")
-        new_list_of_samples.append(sam)
-    return new_list_of_samples
+    def get_samples(genome_dir):
+        list_of_samples = glob.glob(genome_dir + "/*.fasta")
+        new_list_of_samples = []
+        for sam in list_of_samples:
+            sam = sam.split("/")[-1]
+            sam = sam.replace(".fasta", "")
+            new_list_of_samples.append(sam)
+        return new_list_of_samples
 
 
-rule fix_ffn_file:
-    input:
-        annotations = expand(f"{config['output_dir']}/annotated/{{sample}}_ann", sample=get_samples(config['genome_fasta']))
-    output:
-        fixed_annotations = directory(f"{config['output_dir']}/all_ffn")
-    conda: #just needs biopython
-        "Snakemake"
-    script: "scripts/fix_ffn_files.py"
+    rule fix_ffn_file:
+        input:
+            annotations = expand(f"{config['output_dir']}/annotated/{{sample}}_ann", sample=get_samples(config['genome_fasta']))
+        output:
+            fixed_annotations = directory(f"{config['output_dir']}/all_ffn")
+        conda: #just needs biopython
+            "Snakemake"
+        script: "scripts/fix_ffn_files.py"
 
 
 # if you have existing GFF to use:
-rule transform_gff:
-    input:
-        gff_dir = f"{config['gff_dir']}/{{sample}}.gff"
-    output:
-        ffn_files = f"{config['output_dir']}/all_ffn"
-    threads: 1
-    resources:
-        mem_mb=lambda wildcards, attempt: attempt * 15000
-    shell:
-        """
-        python scripts/panphlan_pangenome_generation.py --i_gff {input}
-        mv ffn_from_gff {output.ffn_files}
-        """
-    
+elif config["GFF"]["exec"]:
+    rule transform_gff:
+        input:
+            gff_dir = f"{config['gff_dir']}"
+        output:
+            ffn_files = directory(f"{config['output_dir']}/all_ffn")
+        threads: 1
+        resources:
+            mem_mb=lambda wildcards, attempt: attempt * 15000
+        shell:
+            """
+            python scripts/panphlan_pangenome_generation.py --i_gff {input}
+            mv ffn_from_gff {output.ffn_files}
+            """
+
 
 rule concat:
     input:
