@@ -4,7 +4,9 @@ configfile: "config.yaml"
 
 
 rule all:
-    input: f"{config['output_dir']}/presence_absence_matrix.txt"
+    input:
+        matrix = f"{config['output_dir']}/presence_absence_matrix.txt",
+        summary_file = f"{config['output_dir']}/pangenome_summary.tsv"
 
 
 if config["BAKTA"]["exec"] and config["GFF"]["exec"]:
@@ -67,6 +69,7 @@ elif config["GFF"]["exec"]:
         resources:
             mem_mb=lambda wildcards, attempt: attempt * 15000
         conda:
+            # requires BCBio
             "panphlan"
         shell:
             """
@@ -128,7 +131,7 @@ rule sort_mmseqs2_clusters:
         mem_mb=2000
     log:
         f"{config['output_dir']}/logs/sort_mmseqs2_clusters.log"
-    shell: "sort {input.clusters} > {output.sorted_clusters}"
+    shell: "sort {input.clusters} > {output.sorted_clusters} >{log} 2>&1"
 
 
 rule build_matrix:
@@ -144,4 +147,26 @@ rule build_matrix:
         # env has biopython and pandas
         "poppunk"
     script: "scripts/make_presence_absence_matrix.py"
+
+
+rule summarise_pangenome:
+    input:
+        rep_seq = f"{config['output_dir']}/mmseqs/mmseqs_rep_seq.fasta",
+        matrix= f"{config['output_dir']}/presence_absence_matrix.txt"
+    output:
+        gene_descriptions = f"{config['output_dir']}/mmseqs/rep_seq_descriptions.txt",
+        summary_file = f"{config['output_dir']}/pangenome_summary.tsv"
+    threads: 1
+    resources:
+        mem_mb=5000
+    params:
+        core = config['core']
+    conda:
+        # env has biopython and pandas
+        "poppunk"
+    shell:
+        """
+        grep ">" {input.rep_seq} > {output.gene_descriptions}
+        python scripts/summarise_pangenome.py {params.core} {output.gene_descriptions} {input.matrix} {output.summary_file}
+        """
 

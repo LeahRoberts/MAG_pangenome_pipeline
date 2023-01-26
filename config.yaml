@@ -6,6 +6,9 @@ BAKTA:
 GFF:
   exec : True
 
+### Core vs. accessory cutoff (percentage):
+core: 0.8
+
 ### Required for both workflows:
 
 # output dir
