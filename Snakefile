@@ -66,6 +66,8 @@ elif config["GFF"]["exec"]:
         threads: 1
         resources:
             mem_mb=lambda wildcards, attempt: attempt * 15000
+        conda:
+            "panphlan"
         shell:
             """
             python scripts/panphlan_pangenome_generation.py --i_gff {input}
