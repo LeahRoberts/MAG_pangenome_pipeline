@@ -129,9 +129,7 @@ rule sort_mmseqs2_clusters:
     threads: 1
     resources:
         mem_mb=2000
-    log:
-        f"{config['output_dir']}/logs/sort_mmseqs2_clusters.log"
-    shell: "sort {input.clusters} > {output.sorted_clusters} >{log} 2>&1"
+    shell: "sort {input.clusters} > {output.sorted_clusters}"
 
 
 rule build_matrix:
